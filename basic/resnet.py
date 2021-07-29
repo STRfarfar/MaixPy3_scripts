@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+#在v831运行的1000分类代码
 from maix import nn
 from PIL import Image, ImageFont, ImageDraw
 from maix import display
@@ -5,12 +7,10 @@ from classes_label import labels
 import time
 from maix import camera
 camera.config(size=(224, 224))
-# test_jpg = "/root/test_input/input.jpg"
 model = {
     "param": "./res/resnet.param",
     "bin": "./res/resnet.bin"
 }
-
 options = {
     "model_type":  "awnn",
     "inputs": {
@@ -27,16 +27,6 @@ print("-- load model:", model)
 m = nn.load(model, opt=options)
 print("-- load ok")
 font = ImageFont.truetype("./res/baars.ttf",40, encoding="unic")
-# print("-- read image")
-# img = Image.open(test_jpg)
-# print("-- read image ok")
-# print("-- forward model with image as input")
-# out = m.forward(img, quantize=True)
-# print("-- read image ok")
-# print("-- out:", out.shape)
-# out = nn.F.softmax(out)
-# print(out.max(), out.argmax())
-
 while 1:
     img = camera.capture()
     t = time.time()
