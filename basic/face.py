@@ -34,13 +34,6 @@ print("-- load model:", model)
 m = nn.load(model, opt=options)
 print("-- load ok")
 
-# print("-- read image")
-# img = Image.open(test_jpg)
-# w = options["inputs"]["input0"][1]
-# h = options["inputs"]["input0"][0]
-# # img = img.resize((w, h))
-# # # img.show()ls
-# print("-- read image ok")
 w = 224
 h = 224
 
