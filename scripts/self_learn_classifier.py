@@ -1,3 +1,10 @@
+# MaixPy3自学习脚本一
+# 功能说明：通过V831上的按键控制学习物体，并保存特征文件
+# 使用说明：开机后，前三次每次按下一次右键拍照保存一张图片到算法中，保存三个类别后，再按右键拍照则进行添加相似图片，
+# 相似图片添加15张。添加完成后将会自动进行训练。训练结束后会进入预测阶段。程序会打印出算法结果
+# 按下左键将会保存模型到本地文件。
+# 时间：2021年9月15日
+# 作者：Neutree dianjixz
 from maix import nn
 from PIL import Image, ImageDraw
 from maix import camera, display
@@ -5,14 +12,6 @@ import time
 from maix.nn.app.classifier import Classifier
 from evdev import InputDevice
 from select import select
-
-
-
-
-
-
-
-
 
 class funation:
     class_num = 3
@@ -22,9 +21,6 @@ class funation:
     status = 0
 
     def __init__(self):
-        feature_len = 512
-        input_w = 224
-        input_h = 224
         model = {
             "param": "./res/resnet.param",
             "bin": "./res/resnet.bin"
@@ -33,26 +29,26 @@ class funation:
         options = {
             "model_type":  "awnn",
             "inputs": {
-                "input0": (input_w, input_h, 3)
+                "input0": (224, 224, 3)
             },
             "outputs": {
-                "190": (1, 1, feature_len)
+                "190": (1, 1, 512)
             },
             "mean": [127.5, 127.5, 127.5],
             "norm": [0.0176, 0.0176, 0.0176],
         }
+        camera.config(size=(224, 224))
         self.keys = InputDevice('/dev/input/event0')
-
         print("-- load model:", model)
         self.m = nn.load(model, opt=options)
         print("-- load ok")
-        camera.config(size=(224, 224))
-        self.classifier = Classifier(self.m, self.class_num, self.sample_num, feature_len, input_w, input_h)
-    def __exit__(self):
+        print("-- load classifier")
+        self.classifier = Classifier(self.m, self.class_num, self.sample_num, feature_len, 224, 224)
+        print("-- load ok")
+    def __del__(self):
         del self.classifier
         del self.m
-
-
+        print("-- del model")
 
     def key_pressed(self):
         # TODO: is button pressed

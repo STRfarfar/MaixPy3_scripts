@@ -36,10 +36,10 @@ class funation:
                     time.sleep(0.05)
         else:
             img = camera.read()
-            # draw = display.get_draw()
-            # # draw.text((10, 10), "按右键,拍一张", (255, 0, 0), self.font)  # bgr
-            # # draw.text((30, 10), "按左键不放,一直拍", (255, 0, 0), self.font)  # bgr
-            # display.show()
+            draw = display.get_draw()
+            draw.text((10, 10), "push left ,get one", (255, 0, 0), self.font)  # bgr
+            draw.text((30, 10), "push right aways,aways get", (255, 0, 0), self.font)  # bgr
+            display.show()
 
 
 

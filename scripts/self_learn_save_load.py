@@ -1,3 +1,8 @@
+# MaixPy3自学习脚本二
+# 功能说明：将自学习脚本一中保存的特征文件加载到环境中，继续预测物体类别
+# 时间：2021年9月15日
+# 作者：Neutree dianjixz
+
 from maix import nn
 from PIL import Image, ImageDraw
 from maix import camera, display
@@ -9,39 +14,27 @@ from select import select
 
 
 class funation:
-    class_num = 3
-    sample_num = 15
-    curr_class = 0
-    curr_sample = 0
-    status = 0
     def __init__(self):
-        feature_len = 512
-        input_w = 224
-        input_h = 224
         model = {
             "param": "./res/resnet.param",
             "bin": "./res/resnet.bin"
         }
-
         options = {
             "model_type":  "awnn",
             "inputs": {
-                "input0": (input_w, input_h, 3)
+                "input0": (224, 224, 3)
             },
             "outputs": {
-                "190": (1, 1, feature_len)
+                "190": (1, 1, 512)      # "190": (1, 1, 1000)
             },
             "mean": [127.5, 127.5, 127.5],
             "norm": [0.0176, 0.0176, 0.0176],
         }
-
-
         print("-- load model:", model)
         self.m = nn.load(model, opt=options)
         print("-- load ok")
         camera.config(size=(224, 224))
-        # self.classifier = Classifier(self.m, self.class_num, self.sample_num, feature_len, input_w, input_h)
-        print("-- load model two:")
+        print("-- load classifier")
         self.classifier = load(self.m,"./module.bin")
         print("-- load ok")
     def run(self):
