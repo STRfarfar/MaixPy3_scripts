@@ -1,6 +1,8 @@
-#!/usr/bin/env python
-
-
+#!/usr/bin/python3
+# MaixPy3寻找二维码脚本
+# 功能说明：扫描二维码
+# 时间：2021年9月15日
+# 作者：dianjixz
 from maix import camera
 from PIL import Image, ImageFont, ImageDraw
 from maix import display
@@ -16,16 +18,15 @@ import time
 
 
 class funation:
-    font = None
-    def __init__(self):
-        image = camera.capture()
-        image = camera.capture()
-        image = camera.capture()
-        image = camera.capture()
-        del image
+    def __init__(self,device=None):
         self.font = ImageFont.truetype("./res/baars.ttf", 20, encoding="unic")
+        self.event = self.run
+    def __del__(self):
+        pass
     def run(self):
-        img = camera.capture()
+        # img = camera.capture()          #标准化操作可以不用这个
+        tmp = camera.read(video_num = 0)
+        img = Image.frombytes(mode="RGB", size=(240, 240), data=tmp, decoder_name="raw")
         t = time.time()
         codes = zbarlight.scan_codes(['qrcode','EAN13'], img)     #二维码和条形码
         t = time.time() - t
@@ -41,12 +42,14 @@ class funation:
             draw.text((10, 10), "not qr", (255, 0, 0), self.font)  # bgr
             display.show()
 
+
 if __name__ == "__main__":
     import signal
     def handle_signal_z(signum,frame):
         print("erzi over")
         exit(0)
     signal.signal(signal.SIGINT,handle_signal_z)
+    camera.config(size=(240,240))
     start = funation()
     while True:
-        start.run()
+        start.event()

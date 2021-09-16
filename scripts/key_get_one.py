@@ -1,15 +1,21 @@
 #!/usr/bin/env python
-
+# MaixPy3读取读取按键信息异步版本
+# 功能说明：读取按键事件
+# 时间：2021年9月16日
+# 作者：dianjixz
 from evdev import InputDevice
 import asyncio
+
 
 packet = {
     'selected': "main",
     'status': 0
 }
 
+
 asyncio.set_event_loop(asyncio.new_event_loop())
 keys = InputDevice('/dev/input/event0')
+
 
 async def keys_events(packet, device):
     async for event in device.async_read_loop():
@@ -19,17 +25,12 @@ async def keys_events(packet, device):
             print("you push right!")
 
 
-
-for device in [keys]:
-    asyncio.ensure_future(keys_events(packet, device))
-
 async def main(packet):
-    if packet["selected"] == "main":  # 分类
+    if packet["selected"] == "main":  #执行事件
         print("hello:",packet["status"])
         packet["status"] += 1
         await asyncio.sleep(1)
     asyncio.ensure_future(main(packet))
-
 
 
 if __name__ == "__main__":
@@ -38,7 +39,8 @@ if __name__ == "__main__":
         print("father over")
         exit(0)
     signal.signal(signal.SIGINT,handle_signalm)    
-
+    for device in [keys]:
+        asyncio.ensure_future(keys_events(packet, device))
     asyncio.ensure_future(main(packet))
     loop = asyncio.get_event_loop()
     loop.run_forever()

@@ -13,36 +13,29 @@
 #tilt = 1斜度选项 返回值： [{'x': 236, 'y': 206, 'w': 4, 'h': 7, 'pixels': 16, 'cx': 238, 'cy': 209, 'tilt_Rect': (236.0, 212.0, 236.0, 206.0, 239.0, 206.0, 239.0, 212.0), 'rotation': -1.570796251296997}]
 #tilt_Rect 斜框四个顶点
 #rotation 斜框斜度
-
+# 时间：2021年9月16日
+# 作者：dianjixz
 from maix import camera
-from _maix_opencv import _v83x_opencv
+from maix import maix_cv
 from PIL import Image, ImageDraw
 from maix import display
 import time
-cv = _v83x_opencv()
+
+
 class funation:
     red_hsv   = (176,76,0,255,255,255)
     green_hsv = (72,92,62,93,255,255) 
     blue_hsv  = (95,219,0,255,255,255)
     yello_hsv = (18,122,176,33,255,255)
-    test = (63,147,161,79,195,195)
-    def __init__(self):
-        #跳过一些帧
-        tmp = camera.read()
-        tmp = camera.read()
-        tmp = camera.read()
-        tmp = camera.read()
-        tmp = camera.read()
-        tmp = camera.read()
-        tmp = camera.read()
-        tmp = camera.read()
-        tmp = camera.read()
-        del tmp
+    def __init__(self,device=None):
+        self.event = self.run
+    def __del__(self):
+      pass
     def run(self):
-        tmp = camera.read()
+        tmp = camera.read(video_num = 0)
         if tmp:
             t = time.time()
-            ma = cv.find_blob(tmp, self.test)
+            ma = maix_cv.find_blob(tmp, self.blue_hsv)
             t = time.time() - t
             print("-- forward time: {}s".format(t))
             # print(ma)
@@ -55,13 +48,13 @@ class funation:
                 display.clear()
 
 
-
 if __name__ == "__main__":
     import signal
     def handle_signal_z(signum,frame):
         print("erzi over")
         exit(0)
     signal.signal(signal.SIGINT,handle_signal_z)
+    camera.config(size=(240,240))
     start = funation()
     while True:
-        start.run()
+        start.event()

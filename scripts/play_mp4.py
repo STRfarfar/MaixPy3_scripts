@@ -1,19 +1,31 @@
+#!/usr/bin/python3
+# MaixPy3播放视频脚本
+# 功能说明：播放视频
+# 时间：2021年9月15日
+# 作者：dianjixz
 import pyaudio
 from maix import display, camera
 import av
-# camera.config()
+import threading
+import time
 
 
 class funation:
-    def __init__(self):
+    status = 0
+    def __init__(self,device=None):
+        self.event = self.run
         display.show(camera.capture())
-    def run(self):
+        self.tim = time.time()
+        self.device = device
+    def __del__(self):
+        print("paly exit")
+    def play(self):
         try:
             # recommend flv
             # ffmpeg -r 30 -i bad_apple.mp4 -s 240x240 output.mp4
             # adb push ./output.mp4 /mnt/UDISK/
             # adb push ./test.py / && adb shell 'python ./test.py'
-            path_to_video = '/mnt/UDISK/output.mp4'
+            path_to_video = '/home/res/output.mp4'
             container = av.open(path_to_video)
             ai_stream = container.streams.audio[0]
             vi_stream = container.streams.video[0]
@@ -28,12 +40,23 @@ class funation:
                         ao.write(frame.planes[0].to_bytes())
                 if 'Video' in repr(frame):
                     display.show(bytes(frame.to_rgb().planes[0]))
+                if self.device.funaction_status == -1:
+                    ao.stop_stream()
+                    ao.close()
+                    p.terminate()
+                    return
         except Exception as e:
             print(e)
         finally:
             ao.stop_stream()
             ao.close()
             p.terminate()
+    def run(self):
+        if self.status == 0:
+            threading.Thread(target=self.play).start()
+            self.status = 1
+        time.sleep(0.5)
+
 
 if __name__ == "__main__":
     import signal
@@ -43,8 +66,7 @@ if __name__ == "__main__":
     signal.signal(signal.SIGINT,handle_signal_z)
     start = funation()
     while True:
-        start.run()
-
+        start.event()
 
 
 

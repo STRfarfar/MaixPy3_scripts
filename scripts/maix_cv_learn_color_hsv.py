@@ -68,14 +68,12 @@ if __name__ == "__main__":
     
     while True:
         key_val = key_scan()        # 按键扫描
-
         if key_val == 1:            # 左键按下
             if mode == 1:
                 mode = 0            # 学习模式
             else:
                 print("Please input the label:", end=" ")
                 label = input()
-
                 if label == "clear":                # 删除所有标签和数据
                     idx = 0
                     for i in range(MAX_NUM):
@@ -84,7 +82,6 @@ if __name__ == "__main__":
                 else:
                     labels[idx] = label             # 添加标签到标签列表
                     hsv_list[idx] = hsv_tmp         # 添加颜色阈值到阈值列表
-
                 with open("data.pkl", "wb") as f:   # 保存标签和颜色阈值到文件 
                     pickle.dump(labels, f)
                     pickle.dump(hsv_list, f)
@@ -93,11 +90,9 @@ if __name__ == "__main__":
                     labels = pickle.load(f)
                     hsv_list = pickle.load(f)
                 print("data is:", labels, hsv_list)
-
                 idx = idx + 1
                 if idx == 4:
                     idx = 0
-
         elif key_val == 2:          # 右键按下
             mode = 1                # 识别模式
 
@@ -114,3 +109,13 @@ if __name__ == "__main__":
 
             
 
+if __name__ == "__main__":
+    import signal
+    def handle_signal_z(signum,frame):
+        print("erzi over")
+        exit(0)
+    signal.signal(signal.SIGINT,handle_signal_z)
+    camera.config(size=(240,240))
+    start = funation()
+    while True:
+        start.event()
