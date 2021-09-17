@@ -44,19 +44,17 @@ class funation:
         self.yolo2_decoder = decoder.Yolo2(len(self.labels), self.anchors, net_in_size=(224, 224), net_out_size=(7, 7))
         self.fun_status += 1
         self.event = self.fun[self.fun_status]
-    def map_face(self,x,y,w,h):
-        rx = int(x/224*240)
-        ry = int(y/224*240)
-        rw = int(w/224*240)
-        rh = int(h/224*240)
-        return rx,ry,rw,rh
+    def map_face(self,box):
+        def tran(x):
+            return int(x/224*240)
+        return list(map(tran, box))
     def draw_rectangle_with_title(self,draw, box, disp_str, bg_color=(255, 0, 0), font_color=(255, 255, 255)):
         font = ImageFont.load_default()
         font_w, font_h = font.getsize(disp_str)
-        x,y,w,h = self.map_face(box[0],box[1],box[2],box[3])
-        draw.rectangle((x, y, x+w, y+h), fill=None, outline=bg_color, width=2)
-        draw.rectangle((x, y - font_h, x + font_w, y), fill=bg_color)
-        draw.text((x, y - font_h), disp_str, fill=font_color, font=font)
+        box = self.map_face(box)
+        draw.rectangle((box[0], box[1], box[0]+box[2], box[1]+box[3]), fill=None, outline=bg_color, width=2)
+        draw.rectangle((box[0], box[1] - font_h, box[0] + font_w, box[1]), fill=bg_color)
+        draw.text((box[0], box[1] - font_h), disp_str, fill=font_color, font=font)
     def wait_run(self):
         img = camera.read(video_num = 1)
         display.show()

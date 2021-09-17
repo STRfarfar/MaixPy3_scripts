@@ -8,9 +8,13 @@
 # 时间：2021年9月16日
 # 作者：dianjixz
 from maix import camera
-from maix import maix_cv
 from PIL import Image, ImageDraw
 from maix import display
+try:
+  from maix import maix_cv
+except:
+  from _maix_opencv import _v83x_opencv
+  maix_cv = _v83x_opencv()
 
 
 class funation:
@@ -19,11 +23,11 @@ class funation:
     blue_hsv  = (95,219,0,255,255,255)
     yello_hsv = (18,122,176,33,255,255)
     def __init__(self,device=None):
-      self.event = self.run
+      self.event = self.run                                                       #定义统一调用接口,相当于函数指针  
     def __del__(self):
       pass
     def run(self):
-      tmp = camera.read(video_num = 0)
+      tmp = camera.read(video_num = 0)                                            #从摄像头帧缓冲区内读取240X240大小的图像数据  
       if tmp:
         ma = maix_cv.find_ball(tmp, self.blue_hsv)
         print(ma)

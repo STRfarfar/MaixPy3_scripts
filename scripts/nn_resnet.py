@@ -34,7 +34,7 @@ class funation:
         self.event = self.fun[self.fun_status]
         self.font = ImageFont.truetype("./res/baars.ttf",30, encoding="unic")
         threading.Thread(target=self.load_mode).start()
-        print("face start!")
+        print("resnet start!")
     def __del__(self):
         del self.m
         print("resent exit")

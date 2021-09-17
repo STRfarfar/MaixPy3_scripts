@@ -33,20 +33,38 @@ class funation:
     }
     fun_status = 0
     def __init__(self,device=None):
-        self.fun = [self.wait_run,self.run]
+        self.fun = [self.wait_run,self.run,self.err]
         self.event = self.fun[self.fun_status]
         threading.Thread(target=self.load_mode).start()
         self.font = ImageFont.truetype("./res/baars.ttf",20, encoding="unic")
+    def __del__(self):
+        if self.fun_status != 2:
+            del self.classifier
+            del self.m
+            print("nn self learn save load  exit!")
+        else:
+            print("nn self learn save load  exit!")
     def load_mode(self):
-        print("-- load model:", self.model)
-        self.m = nn.load(self.model, opt=self.options)
-        print("-- load ok")
-        camera.config(size=(224, 224))
-        print("-- load classifier")
-        self.classifier = load(self.m,"./module.bin")
-        print("-- load ok")
-        self.fun_status += 1
-        self.event = self.fun[self.fun_status]
+        import os.path
+        if os.path.isfile("./module.bin"):
+            print("-- load model:", self.model)
+            self.m = nn.load(self.model, opt=self.options)
+            print("-- load ok")
+            print("-- load classifier")
+            self.classifier = load(self.m,"./module.bin")
+            print("-- load ok")
+            self.fun_status += 1
+            self.event = self.fun[self.fun_status]
+        else:
+            self.fun_status = 2
+            self.event = self.fun[self.fun_status]
+    def err(self):
+        tmp = camera.read(video_num = 1)
+        draw = display.get_draw()
+        draw.text((10, 10), "no classifier,", (255, 0, 0), self.font)  
+        draw.text((10, 30), "please run self learn,", (255, 0, 0), self.font)  
+        display.show()
+        print("no classifier,please run self learn")
     def wait_run(self):
         tmp = camera.read(video_num = 1)
         display.show()

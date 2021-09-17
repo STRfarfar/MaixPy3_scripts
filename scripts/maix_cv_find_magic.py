@@ -3,11 +3,15 @@
 # 功能说明：获取魔方面颜色图案信息
 # 时间：2021年9月16日
 # 作者：dianjixz
-from maix import maix_cv
 from maix import camera
 from PIL import Image, ImageDraw
 from maix import display
 import time
+try:
+  from maix import maix_cv
+except:
+  from _maix_opencv import _v83x_opencv
+  maix_cv = _v83x_opencv()
 
 
 class funation:
@@ -29,7 +33,6 @@ class funation:
             tmp = camera.read(video_num = 0)
             ma.append(maix_cv.find_blob_lab(tmp, self.thr[2 * i]))
             ma.append(maix_cv.find_blob_lab(tmp, self.thr[2 * i + 1]))
-        # print(ma)
         draw = display.get_draw()
         for idx, blob in enumerate(ma):
             if blob:

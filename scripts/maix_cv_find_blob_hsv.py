@@ -16,10 +16,14 @@
 # 时间：2021年9月16日
 # 作者：dianjixz
 from maix import camera
-from maix import maix_cv
 from PIL import Image, ImageDraw
 from maix import display
 import time
+try:
+  from maix import maix_cv
+except:
+  from _maix_opencv import _v83x_opencv
+  maix_cv = _v83x_opencv()
 
 
 class funation:

@@ -15,17 +15,21 @@
 #rotation 斜框斜度
 # 时间：2021年9月16日
 # 作者：dianjixz
-from maix import maix_cv
 from maix import camera
 from PIL import Image, ImageDraw
 from maix import display
 import time
+try:
+  from maix import maix_cv
+except:
+  from _maix_opencv import _v83x_opencv
+  maix_cv = _v83x_opencv()
 
 class funation:
     green = [(28,-36,-14,68,-5,15)]  #绿色
     red = [(20,22,-3,55,52,42)]    #红色
     yellow = [(35,-6,22,88,5,81)]   #黄色
-    bull = [(14,12,-63,44,33,-21)]  #蓝色
+    bull = [(13, 11, -91, 54, 48, -28)]  #蓝色
     white = [(41,6,-32,74,11,-12)]  #白色
     black = [(10,-3,-28,50,10,-4)]  #黑色
     def __init__(self,device=None):

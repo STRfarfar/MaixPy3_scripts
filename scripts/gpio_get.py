@@ -11,7 +11,7 @@ class funation:         # for V831
     PG_BASE = 192 # "PG"
     PH_BASE = 224 # "PH"   
     def __init__(self,device=None,gpiochip="gpiochip1",IO_BASE=224,GPIO_PIN=14):
-      self.event = self.get_gpio
+      self.event = self.get_gpio                                                                #定义统一调用接口,相当于函数指针  
       self.gpiochip1 = chip(gpiochip)
       self.IO = self.gpio(IO_BASE + GPIO_PIN) # "PH14"
     def __del__(self):
