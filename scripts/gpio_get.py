@@ -36,7 +36,7 @@ class funation:         # for V831
 if __name__ == "__main__":
     import signal
     def handle_signal_z(signum,frame):
-        print("erzi over")
+        print("APP OVER")
         exit(0)
     signal.signal(signal.SIGINT,handle_signal_z)
     start = funation()

@@ -50,7 +50,7 @@ def key_scan():
 if __name__ == "__main__":
     import signal
     def handle_signal_z(signum,frame):
-        print("erzi over")
+        print("APP OVER")
         exit(0)
     signal.signal(signal.SIGINT,handle_signal_z)
     MAX_NUM = 4
@@ -112,7 +112,7 @@ if __name__ == "__main__":
 if __name__ == "__main__":
     import signal
     def handle_signal_z(signum,frame):
-        print("erzi over")
+        print("APP OVER")
         exit(0)
     signal.signal(signal.SIGINT,handle_signal_z)
     camera.config(size=(240,240))

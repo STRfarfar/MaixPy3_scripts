@@ -133,7 +133,7 @@ class EXAMPLES_FUN:
 if __name__ == "__main__":
     import signal
     def handle_signalm(signum,frame):
-        print("father over")
+        print("APP OVER")
         exit(0)
     signal.signal(signal.SIGINT,handle_signalm)    
     funation = EXAMPLES_FUN()
