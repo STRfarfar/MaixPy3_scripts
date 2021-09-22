@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # MaixPy3读取GPIO脚本
-# 功能说明：读取GPIO上的电平信号,并保存
+# 功能说明：读取GPIO上的电平信号
 # 时间：2021年9月16日
 # 作者：dianjixz
 from gpiod import chip, line, line_request
