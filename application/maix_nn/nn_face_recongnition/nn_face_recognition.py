@@ -84,13 +84,16 @@ class funation:
                     return 3
         return 0
     def load_mode(self):                                    #模型加载函数,由模型加载线程启动
+        threshold = 0.5                                         #人脸阈值
+        nms = 0.3                                               
+        max_face_num = 1                                        #输出的画面中的人脸的最大个数
         print("-- load model:", self.model)
         self.m = nn.load(self.model, opt=self.options)
         print("-- load ok")
         print("-- load model:", self.model_fe)
         self.m_fe = nn.load(self.model_fe, opt=self.options_fe)
         print("-- load ok")
-        self.face_recognizer = FaceRecognize(self.m, self.m_fe, self.feature_len, self.input_size)
+        self.face_recognizer = FaceRecognize(self.m, self.m_fe, self.feature_len, self.input_size, threshold, nms, max_face_num)
         self.fun_status += 1
         self.event = self.fun[self.fun_status]               #统一调用接口切换至self.run函数
     def map_face(self,box,points):                           #将224*224空间的位置转换到240*240空间内
@@ -109,6 +112,11 @@ class funation:
         draw.rectangle((box[0], box[1], box[0] + box[2], box[1] + box[3]), fill=None, outline=bg_color, width=2)
         draw.rectangle((box[0], box[1] - font_h, box[0] + font_w, box[1]), fill=bg_color)
         draw.text((box[0], box[1] - font_h), disp_str, fill=font_color, font=self.font)
+    def recognize(self, feature):                                                                   #进行人脸匹配
+        def _compare(user):                                                         #定义映射函数
+            return self.face_recognizer.compare(user, feature)                      #推测匹配分数 score相关分数
+        face_score_l = list(map(_compare,self.users))                               #映射特征数据在记录中的比对分数
+        return max(enumerate(face_score_l), key=lambda x: x[-1])                #提取出人脸分数最大值和最大值所在的位置
     def wait_run(self):                                         #等待模型加载阶段
         tmp = camera.read(video_num = 1)
         display.show()
@@ -117,7 +125,7 @@ class funation:
         if not img:
             time.sleep(0.02)
             return
-        faces = self.face_recognizer.get_feature(img)           #提取人脸特征信息
+        faces = self.face_recognizer.get_faces(img,False)           #提取人脸特征信息
         if faces:
             # for prob, box, landmarks, feature, std_img in faces:
             for prob, box, landmarks, feature in faces:
@@ -137,10 +145,8 @@ class funation:
                         print("user empty")
                 draw = display.get_draw()                       #得到一张画布
                 if len(self.users):                             #判断是否记录人脸
-                    def _compare(user):
-                        return self.face_recognizer.compare(user, feature)                      #推测匹配分数 score相关分数
-                    face_score_l = list(map(_compare,self.users))                               #映射特征数据在记录中的比对分数
-                    maxIndex = max(enumerate(face_score_l), key=lambda x: x[-1])                #提取出人脸分数最大值和最大值所在的位置
+                    maxIndex = self.recognize(feature)
+
                     if maxIndex[1] > self.score_threshold:                                      #判断人脸识别阈值,当分数大于阈值时认为是同一张脸,当分数小于阈值时认为是相似脸
                         self.darw_info(draw, box, landmarks, "{}:{:.2f}".format(self.names[maxIndex[0]], maxIndex[1]), font_color=(0, 0, 255, 255), bg_color=(0, 255, 0, 255))
                         print("user: {}, score: {:.2f}".format(self.names[maxIndex[0]], maxIndex[1]))
