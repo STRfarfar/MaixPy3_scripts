@@ -108,7 +108,7 @@ class EXAMPLES_FUN:
         fun_moudle = importlib.import_module(self.class_lable[list(self.class_lable)[self.fun_status]])
         startxx = fun_moudle.funation(self.device)
         while True:
-            if self.get_key() == 3:
+            if key.key_select_no_sleep() == 3:
                 num_times += 1
                 if num_times > 15:
                     self.device.funaction_status = -1
