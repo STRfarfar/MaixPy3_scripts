@@ -46,7 +46,7 @@ class funation:
                     draw.rectangle((i["x"], i["y"], i["x"] + i["w"], i["y"] + i["h"]), outline='red', width=1)
                 display.show()
             else:
-                display.clear()
+                display.show()
         else:
             print('tmp err')
 

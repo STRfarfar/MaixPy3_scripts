@@ -6,12 +6,12 @@
 import os
 import sys
 import importlib
-from evdev import InputDevice
-from select import select
 from PIL import Image, ImageFont, ImageDraw
 from maix import display
 import gc
 from maix import camera
+import key_get_two as key
+
 
 class DEVICES:  
     funaction_status = 0
@@ -33,23 +33,11 @@ class EXAMPLES_FUN:
     def __init__(self):
         camera.config(size=(224,224))
         self.font = ImageFont.truetype("./res/baars.ttf", 20, encoding="unic")
-        self._keys = InputDevice('/dev/input/event0')
         self.start_logo()
         self.device = DEVICES()
         self.event = self.default
     def __del__(self):
         pass
-    def get_key(self):
-        r,w,x = select([self._keys], [], [],0)
-        if r:
-            for event in self._keys.read(): 
-                if event.value == 1 and event.code == 0x02:     # 右键
-                    return 1
-                elif event.value == 1 and event.code == 0x03:   # 左键
-                    return 2
-                elif event.value == 2 and event.code == 0x03:   # 左键连按
-                    return 3
-        return 0
     def start_logo(self):
         canvas = Image.new("RGB", (240, 240), "#2c3e50")
         with Image.open('./res/logo.png') as logo:
@@ -69,7 +57,7 @@ class EXAMPLES_FUN:
         draw.text((160, 0), u'demo> ', "#16a085", self.font)
         display.show(canvas)
         gc.collect()
-        key_val = self.get_key()
+        key_val = key.key_select_no_sleep()
         if key_val == 1:
             self.event = self.fun_choose
         elif key_val == 2:
@@ -90,7 +78,7 @@ class EXAMPLES_FUN:
         draw.text((60, 5),list(self.class_lable)[self.fun_status], "#bdc3c7", self.font)
         display.show(canvas)
         while True:
-            key_val = self.get_key()
+            key_val = key.key_select_no_sleep()
             if key_val == 1:     # 右键
                 if self.fun_status == len(self.class_lable):
                     self.event = self.default
