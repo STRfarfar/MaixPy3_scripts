@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# maix_cv.find_ball(pic,hsv)函数说明
+# maix_cv.find_ball(pic,lab)函数说明
 # 功能:在图片pic中寻找符合hsv颜色区域的小球
 # 输入：pic，240*240尺寸的图片bytes数据
 #     hsv,hsv阈值数组，前三个是最小值，后三个是最大值
@@ -42,7 +42,7 @@ class funation:
                           width =2)
           display.show()
         else:
-          display.clear()
+          display.show()
 
 
 if __name__ == "__main__":

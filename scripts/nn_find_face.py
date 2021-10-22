@@ -6,7 +6,6 @@
 from maix import nn
 from maix.nn import decoder
 from maix import display, camera
-from maix.nn import decoder
 from PIL import Image, ImageFont, ImageDraw
 import time
 import threading
@@ -33,6 +32,7 @@ class funation:
     def __init__(self,device=None):
         self.fun = [self.wait_run,self.run]
         self.event = self.fun[self.fun_status]
+        print("face start init!")
         threading.Thread(target=self.load_mode).start()
         print("face start!")
     def __del__(self):
@@ -40,7 +40,9 @@ class funation:
         del self.yolo2_decoder
         print("face exit")
     def load_mode(self):
+        print("face start one!")
         self.m = nn.load(self.model, opt=self.options)
+        print("face start two!")
         self.yolo2_decoder = decoder.Yolo2(len(self.labels), self.anchors, net_in_size=(224, 224), net_out_size=(7, 7))
         self.fun_status += 1
         self.event = self.fun[self.fun_status]

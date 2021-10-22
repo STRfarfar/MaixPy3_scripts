@@ -7,8 +7,9 @@ from maix import camera
 from PIL import Image, ImageDraw
 from maix import display
 import time
-from maix import vision as maix_cv
-
+# from maix import vision as maix_cv
+from _maix_opencv import _v83x_opencv
+maix_cv = _v83x_opencv() 
 
 
 import numpy as np
@@ -77,8 +78,8 @@ class funation:
             else:
                 draw.rectangle(idx, outline='red', width=1)
                 mda = idx[0:2] + (13,13)
-                lab_c = maix_cv.get_blob_lab(tmp, mda, 0)[0:3]
-                rgb_c = Lab2RGB(lab_c)
+                lab_c = maix_cv.get_blob_lab(tmp, mda, 0,color = 0)
+                rgb_c = (int(lab_c[0]),int(lab_c[1]),int(lab_c[2]))
                 print(rgb_c)
                 draw.rectangle(self.md[i-1], outline='white', width=1,fill = tuple(rgb_c))
 

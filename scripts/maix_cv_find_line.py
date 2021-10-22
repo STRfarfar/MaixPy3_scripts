@@ -12,7 +12,10 @@ from maix import display
 import time
 from maix import vision as maix_cv
 
-
+# while True:
+#     img_bytes = cam.read()
+#     if img_bytes[0]:
+#         __fastview__.draw(img_bytes[1],240,240)
 class funation:
     def __init__(self,device=None):
       self.event = self.run
